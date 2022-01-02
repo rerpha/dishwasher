@@ -6,9 +6,11 @@ class State:
 
 
 s = State()
+app = Flask(__name__)
 
 
-def generate_html():
+@app.route("/")
+def hello():
     return f"""
     <!doctype html>
         <html>
@@ -22,33 +24,19 @@ def generate_html():
             <body>
                 <h1 class="fs-1">Dishwasher is <button class="btn btn-primary btn-lg" onClick="change()"> {"loading" if s.loading else "unloading"}</button></h1>
                 <script>
-                    function sleep(milliseconds) {{
-                        const date = Date.now();
-                        let currentDate = null;
-                        do {{
-                            currentDate = Date.now();
-                        }} while (currentDate - date < milliseconds);
-                    }}
                     function change() {{ 
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("GET", "/change", true);
-                        xhr.send("");
-                        sleep(200);
-                        location.reload();
+                        fetch("./change").then(function(response) {{
+                            return response.json();
+                        }}).then(function(data) {{
+                            location.reload();
+                        }}).catch(function() {{
+                            console.log("Booo");
+                        }});
                     }}
                 </script>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
             </body>
         </html>
     """
-
-
-app = Flask(__name__)
-
-
-@app.route("/")
-def hello():
-    return generate_html()
 
 
 @app.route("/change", methods=["GET"])
