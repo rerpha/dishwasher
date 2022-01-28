@@ -9,7 +9,7 @@ s = State()
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/dishwasher")
 def hello():
     return f"""
     <!doctype html>
@@ -25,7 +25,7 @@ def hello():
                 <h3>Dishwasher is <button class="btn-large" onClick="change()"> {"loading" if s.loading else "unloading"}</button></h1>
                 <script>
                     function change() {{ 
-                        fetch("./change").then(function(response) {{
+                        fetch("./dishwasher/change").then(function(response) {{
                             return response.json();
                         }}).then(function(data) {{
                             location.reload();
@@ -39,7 +39,7 @@ def hello():
     """
 
 
-@app.route("/change", methods=["GET"])
+@app.route("/dishwasher/change", methods=["GET"])
 def change():
     s.loading = not s.loading
     return "200"
