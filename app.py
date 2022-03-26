@@ -1,8 +1,9 @@
 from flask import Flask
-
+import datetime
 
 class State:
     loading = True
+    last_updated = ""
 
 
 s = State()
@@ -23,6 +24,7 @@ def hello():
             </head>
             <body>
                 <h3>Dishwasher is <button class="btn-large" onClick="change()"> {"loading" if s.loading else "unloading"}</button></h1>
+                <p class="flow-text">last updated at {s.last_updated}</p>
                 <script>
                     function change() {{ 
                         fetch("./dishwasher/change").then(function(response) {{
@@ -42,6 +44,7 @@ def hello():
 @app.route("/dishwasher/change", methods=["GET"])
 def change():
     s.loading = not s.loading
+    s.last_updated = str(datetime.datetime.utcnow())   
     return "200"
 
 
